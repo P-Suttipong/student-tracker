@@ -1,19 +1,20 @@
-
+import Devices from "pages/Devices.vue";
+import Students from "pages/Students.vue";
+import Index from "pages/Index.vue";
 const routes = [
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: "", component: Index, name: "INDEX" },
+      { path: "students", component: Students, name: "Students" },
+      { path: "devices", component: Devices, name: "Devices" }
     ]
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
-    path: '*',
-    component: () => import('pages/Error404.vue')
+    path: "*",
+    component: () => import("pages/Error404.vue")
   }
-]
+];
 
-export default routes
+export default routes;

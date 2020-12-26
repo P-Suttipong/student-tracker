@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh lpR lFf">
-    <q-drawer :width="150" show-if-above v-model="left" side="left" elevated>
+    <q-drawer :width="150" show-if-above v-model="left" side="left" bordered>
       <div class="justify-center">
         <img class="q-mt-xs logo" src="~assets/Logo.png" />
       </div>
@@ -13,10 +13,26 @@
             class="icon-menu"
             src="~assets/img/van_icon.png"
           />
-          <img class="icon-menu" src="~assets/img/device_icon.png" />
-          <img class="icon-menu" src="~assets/img/students_icon.png" />
+          <img
+            @click="deviceActive()"
+            :class="deviceClass"
+            class="icon-menu"
+            src="~assets/img/device_icon.png"
+          />
+          <img
+            @click="studentActive()"
+            :class="studentClass"
+            class="icon-menu"
+            src="~assets/img/students_icon.png"
+          />
+          <img
+            @click="userActive()"
+            :class="userClass"
+            class="icon-menu"
+            src="~assets/img/user_icon.png"
+          />
         </div>
-        <div class="col-4 d-flex flex justify-center">
+        <div class="logout col-4 d-flex flex justify-center">
           <img class="icon-menu" src="~assets/img/logout_icon.png" />
         </div>
       </div>
@@ -44,12 +60,56 @@ export default {
   data() {
     return {
       left: false,
-      vehicleClass: ""
+      vehicleClass: "",
+      deviceClass: "",
+      studentClass: "",
+      userClass: ""
     };
   },
   methods: {
     vehicleActive() {
       this.vehicleClass = "active-menu";
+      this.deviceClass = "";
+      this.studentClass = "";
+      this.userClass = "";
+      this.$router.push("/");
+    },
+    deviceActive() {
+      this.vehicleClass = "";
+      this.deviceClass = "active-menu";
+      this.studentClass = "";
+      this.userClass = "";
+      this.$router.push("/devices");
+    },
+    studentActive() {
+      this.vehicleClass = "";
+      this.deviceClass = "";
+      this.studentClass = "active-menu";
+      this.userClass = "";
+      this.$router.push("/students");
+    },
+    userActive() {
+      this.vehicleClass = "";
+      this.deviceClass = "";
+      this.studentClass = "";
+      this.userClass = "active-menu";
+      this.$router.push("/");
+    }
+  },
+  mounted() {
+    console.log(this.$route);
+    if (this.$route.path === "/devices") {
+      this.vehicleClass = "";
+      this.deviceClass = "active-menu";
+      this.studentClass = "";
+    } else if (this.$route.path === "/students") {
+      this.vehicleClass = "";
+      this.deviceClass = "";
+      this.studentClass = "active-menu";
+    } else {
+      this.vehicleClass = "active-menu";
+      this.deviceClass = "";
+      this.studentClass = "";
     }
   }
 };
@@ -64,14 +124,12 @@ p {
 }
 
 .icon-menu {
-  width: 150px;
+  width: 145px;
 }
 
 .icon-menu:hover {
   background-color: rgba($pink, 0.2);
   cursor: pointer;
-  // border-left: 5px solid red;
-  // filter: sepia(100%);
 }
 
 .active-menu {
@@ -79,6 +137,10 @@ p {
 }
 
 .logo {
-  width: 150px;
+  width: 145px;
+}
+
+.logout {
+  margin-top: 30vh;
 }
 </style>

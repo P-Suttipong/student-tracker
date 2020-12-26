@@ -2,7 +2,7 @@
   "name": "student-tracker",
   "version": "0.0.1",
   "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "productName": "Student Tracker",
   "author": "P-Suttipong <60318722+P-Suttipong@users.noreply.github.com>",
   "private": true,
   "scripts": {
@@ -12,7 +12,10 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
-    "quasar": "^1.0.0"
+    "file-url": "^3.0.0",
+    "mapbox-gl": "^2.0.1",
+    "quasar": "^1.0.0",
+    "vue-mapbox": "^0.4.1"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0"
