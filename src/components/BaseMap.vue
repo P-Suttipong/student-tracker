@@ -14,7 +14,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.location);
+    // console.log(this.location);
     var geojson = {
       type: "FeatureCollection",
       features: [

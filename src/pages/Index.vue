@@ -6,34 +6,53 @@
     <div class="column flex flex-center">
       <div class="top column flex flex-center">
         <h2>ข้อมูลยานพาหนะ</h2>
-        <q-input
-          @input="searchVehicle(vehicleID)"
-          class="search"
-          dense
-          rounded
-          v-model="vehicleID"
-          label="Serach"
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-          <template v-slot:append>
-            <q-icon
-              v-if="vehicleID !== ''"
-              name="close"
-              @click="vehicleID = ''"
-              class="cursor-pointer"
-            />
-          </template>
-        </q-input>
+        <div class="row">
+          <q-input
+            @input="searchVehicle(vehicleID)"
+            class="search"
+            dense
+            rounded
+            v-model="vehicleID"
+            label="Serach By ID"
+          >
+            <template v-slot:prepend>
+              <q-icon name="search" />
+            </template>
+            <template v-slot:append>
+              <q-icon
+                v-if="vehicleID !== ''"
+                name="close"
+                @click="fetchVehicles()"
+                class="cursor-pointer"
+              />
+            </template>
+          </q-input>
+          <q-btn @click="openAddModal()" class="add-btn-2"
+            ><i class="fas fa-plus"></i
+          ></q-btn>
+        </div>
       </div>
       <div class="table">
-        <div v-for="item in vehicles" :key="item.id">
+        <div v-for="item in vehiclesForShow" :key="item.id">
           <VehicleCard :vehicle="item"></VehicleCard>
         </div>
       </div>
-      <q-btn class="add-btn"><i class="fas fa-plus"></i></q-btn>
+      <!-- <q-btn class="add-btn"><i class="fas fa-plus"></i></q-btn> -->
     </div>
+    <q-dialog v-model="addModal">
+      <q-card class="dialog-card">
+        <div>
+          <q-input class="add-input" outlined label="ชื่อ" />
+          <q-input class="add-input" outlined label="ป้ายทะเบียน" />
+          <q-input class="add-input" outlined label="จังหวัด" />
+          <q-input class="add-input" outlined label="ประเภท" />
+          <q-input class="add-input" outlined label="Device ID" />
+          <div class="row justify-center">
+            <q-btn class="add-btn">เพิ่ม</q-btn>
+          </div>
+        </div>
+      </q-card>
+    </q-dialog>
   </q-scroll-area>
 </template>
 
@@ -46,23 +65,32 @@ export default {
   components: { VehicleCard, BaseMap, QScrollArea },
   methods: {
     searchVehicle(vehicleID) {
-      console.log(vehicleID);
+      // console.log(vehicleID);
       if (vehicleID !== "") {
         let result = this.vehicles.filter(vehicle => vehicle.id === vehicleID);
-        console.log(result);
-        this.vehicles = result;
+        // console.log(result);
+        this.vehiclesForShow = result;
       } else {
-        this.vehicles = this.vehicles;
+        this.vehiclesForShow = this.vehicles;
       }
+    },
+    async fetchVehicles() {
+      this.vehicleID = "";
+      this.vehiclesForShow = this.vehicles;
+    },
+    async openAddModal() {
+      this.addModal = true;
     }
   },
   data() {
     return {
+      addModal: false,
       vehicleID: "",
+      vehiclesForShow: [],
       vehicles: [
         {
           id: "1",
-          name: "รถโรงเรียน",
+          name: "123456789012345",
           status: true,
           type: "รถตู้",
           plateNumber: "70-1234",
@@ -182,6 +210,9 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    this.vehiclesForShow = this.vehicles;
   }
 };
 </script>
@@ -210,7 +241,7 @@ h2 {
   font-size: 22px;
   padding: 1px 30px 5px 30px;
   border-radius: 50px;
-  border: 2px solid $greyText;
+  border: 3px solid $pink;
   margin-top: -30px;
   margin-bottom: 30px;
 }
@@ -218,12 +249,28 @@ h2 {
   background-color: $pink;
   color: white;
   border-radius: 50px;
-  width: 70px;
-  height: 70px;
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
+  width: 80px;
+  height: 50px;
   font-size: 20px;
-  z-index: 100;
+  font-family: "FC_Home";
+}
+.add-btn-2 {
+  margin-top: -30px;
+  margin-left: 10px;
+  background-color: $pink;
+  color: white;
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+}
+
+.dialog-card {
+  padding: 20px 20px 20px 20px;
+}
+
+.add-input {
+  width: 300px;
+  margin-bottom: 10px;
 }
 </style>

@@ -4,17 +4,23 @@
       <div></div>
       <div class="row justify-between">
         <p class="col-1">ID : {{ vehicle.id }}</p>
-        <p class="col-2">ชื่อ : {{ vehicle.name }}</p>
+        <p class="col-2">{{ vehicle.name }}</p>
         <q-toggle
           color="teal-4"
           class="toggle col-1"
           v-model="vehicle.status"
         />
-        <p class="col-2">ประเภท : {{ vehicle.type }}</p>
-        <p class="col-2">ป้าย : {{ vehicle.plateNumber }}</p>
+        <p class="col-1">{{ vehicle.type }}</p>
+        <p class="col-1">{{ vehicle.plateNumber }}</p>
         <p class="col-2">{{ vehicle.plateProvince }}</p>
         <p @click="openMapModal(vehicle.lat, vehicle.long)" class="map-icon">
           <i class="fas fa-map-marked-alt"></i>
+        </p>
+        <p class="map-icon">
+          <i class="fas fa-users"></i>
+        </p>
+        <p class="map-icon">
+          <i class="fas fa-inbox"></i>
         </p>
       </div>
     </q-card>
@@ -53,7 +59,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.vehicle);
+    // console.log(this.vehicle);
   }
 };
 </script>
