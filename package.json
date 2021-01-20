@@ -13,6 +13,7 @@
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
     "file-url": "^3.0.0",
+    "js-sha1": "^0.6.0",
     "mapbox-gl": "^2.0.1",
     "quasar": "^1.0.0",
     "vue-mapbox": "^0.4.1"

@@ -3,25 +3,28 @@
     <q-card class="card">
       <div></div>
       <div class="row justify-between">
-        <p class="col-1">ID : {{ vehicle.id }}</p>
-        <p class="col-2">{{ vehicle.name }}</p>
-        <q-toggle
+        <p class="col-2">ID : {{ vehicle.device_id }}</p>
+        <p class="col-4">Name: {{ vehicle.name }}</p>
+        <p class="col-3">Group: {{ vehicle.account }}</p>
+        <!-- <q-toggle
           color="teal-4"
           class="toggle col-1"
           v-model="vehicle.status"
-        />
-        <p class="col-1">{{ vehicle.type }}</p>
-        <p class="col-1">{{ vehicle.plateNumber }}</p>
-        <p class="col-2">{{ vehicle.plateProvince }}</p>
-        <p @click="openMapModal(vehicle.lat, vehicle.long)" class="map-icon">
-          <i class="fas fa-map-marked-alt"></i>
-        </p>
-        <p class="map-icon">
-          <i class="fas fa-users"></i>
-        </p>
-        <p class="map-icon">
-          <i class="fas fa-inbox"></i>
-        </p>
+        /> -->
+        <!-- <p class="col-1">{{ vehicle.type }}</p> -->
+        <!-- <p class="col-1">{{ vehicle.plateNumber }}</p> -->
+        <!-- <p class="col-2">{{ vehicle.plateProvince }}</p> -->
+        <div class="col-2 row justify-between">
+          <p @click="openMapModal(vehicle.lat, vehicle.lon)" class="map-icon">
+            <i class="fas fa-map-marked-alt"></i>
+          </p>
+          <p class="map-icon" @click="openStudentModal()">
+            <i class="fas fa-users"></i>
+          </p>
+          <p class="map-icon" @click="openDeviceInfoModal()">
+            <i class="fas fa-inbox"></i>
+          </p>
+        </div>
       </div>
     </q-card>
     <q-dialog v-model="openMap"
@@ -56,6 +59,13 @@ export default {
       this.lat = lat;
       this.long = long;
       this.openMap = true;
+    },
+    openStudentModal() {
+      this.$emit("openModal");
+    },
+    openDeviceInfoModal() {
+      this.$emit("openInfoModal");
+      this.$emit("lineKey", this.vehicle.lineKey);
     }
   },
   mounted() {
@@ -67,7 +77,7 @@ export default {
 <style lang="scss" scoped>
 .card {
   border: 3px solid #16bfc4;
-  width: 80vw;
+  width: 60vw;
   height: 6vh;
   padding: 20px 30px 20px 30px;
   border-radius: 10px;

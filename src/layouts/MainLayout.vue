@@ -33,7 +33,11 @@
           />
         </div>
         <div class="logout col-4 d-flex flex justify-center">
-          <img class="icon-menu" src="~assets/img/logout_icon.png" />
+          <img
+            @click="logOut()"
+            class="icon-menu"
+            src="~assets/img/logout_icon.png"
+          />
         </div>
       </div>
     </q-drawer>
@@ -94,6 +98,12 @@ export default {
       this.studentClass = "";
       this.userClass = "active-menu";
       this.$router.push("/");
+    },
+    async logOut(){
+      let res = await this.$store.dispatch("logout");
+      if (res) {
+        this.$router.push("/login");
+      }
     }
   },
   mounted() {

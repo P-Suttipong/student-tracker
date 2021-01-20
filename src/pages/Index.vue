@@ -3,6 +3,7 @@
     style="height: 100vh;"
     class=" flex items-start justify-center"
   >
+    <div></div>
     <div class="column flex flex-center">
       <div class="top column flex flex-center">
         <h2>ข้อมูลยานพาหนะ</h2>
@@ -27,15 +28,39 @@
               />
             </template>
           </q-input>
-          <q-btn @click="openAddModal()" class="add-btn-2"
-            ><i class="fas fa-plus"></i
+          <q-btn @click="searchByAPI()" class="add-btn-2"
+            ><i class="fas fa-search"></i
           ></q-btn>
+          <!-- <q-btn @click="openAddModal()" class="add-btn-2"
+            ><i class="fas fa-plus"></i
+          ></q-btn> -->
+        </div>
+
+        <div class="row justify-end">
+          <p @click="prevPage" class="pagination-icon">
+            <i class="fas fa-chevron-circle-left"></i>
+          </p>
+          <p class="page-number">Page : {{ pageNumber }}</p>
+          <p @click="nextPage" class="pagination-icon">
+            <i class="fas fa-chevron-circle-right"></i>
+          </p>
         </div>
       </div>
       <div class="table">
-        <div v-for="item in vehiclesForShow" :key="item.id">
-          <VehicleCard :vehicle="item"></VehicleCard>
+        <div v-if="isLoading" class="row justify-center q-mb-md">
+          <q-spinner class="spinner" size="3em" :thickness="5" />
         </div>
+        <div v-else v-for="item in vehiclesShowList" :key="item.id">
+          <VehicleCard
+            @openModal="studentModal = true"
+            @openInfoModal="infoModal = true"
+            @lineKey="deviceInfoLineKey"
+            :vehicle="item"
+          ></VehicleCard>
+        </div>
+        <p class="error-text" v-if="showErrorMessage">
+          ไม่พบข้อมูลที่ท่านต้องการ
+        </p>
       </div>
       <!-- <q-btn class="add-btn"><i class="fas fa-plus"></i></q-btn> -->
     </div>
@@ -53,166 +78,142 @@
         </div>
       </q-card>
     </q-dialog>
+    <StudentCard
+      @closeModal="studentModal = false"
+      :modal="studentModal"
+    ></StudentCard>
+    <DeviceInfo
+      @closeModal="infoModal = false"
+      :lineKey="lineKey"
+      :modal="infoModal"
+    ></DeviceInfo>
   </q-scroll-area>
 </template>
 
 <script>
+import vue from "vue";
 import VehicleCard from "../components/VehicleCard";
 import BaseMap from "../components/BaseMap";
 import { Quasar, QScrollArea } from "quasar";
+import StudentCard from "../components/StudentCard";
+import { mapState } from "vuex";
+import DeviceInfo from "../components/DeviceInfo";
 export default {
   name: "vehicles",
-  components: { VehicleCard, BaseMap, QScrollArea },
-  methods: {
-    searchVehicle(vehicleID) {
-      // console.log(vehicleID);
-      if (vehicleID !== "") {
-        let result = this.vehicles.filter(vehicle => vehicle.id === vehicleID);
-        // console.log(result);
-        this.vehiclesForShow = result;
-      } else {
-        this.vehiclesForShow = this.vehicles;
-      }
-    },
-    async fetchVehicles() {
-      this.vehicleID = "";
-      this.vehiclesForShow = this.vehicles;
-    },
-    async openAddModal() {
-      this.addModal = true;
-    }
-  },
+  components: { VehicleCard, BaseMap, QScrollArea, StudentCard, DeviceInfo },
   data() {
     return {
       addModal: false,
+      studentModal: false,
+      infoModal: false,
+      pageNumber: 1,
       vehicleID: "",
-      vehiclesForShow: [],
-      vehicles: [
-        {
-          id: "1",
-          name: "123456789012345",
-          status: true,
-          type: "รถตู้",
-          plateNumber: "70-1234",
-          plateProvince: "ภูเก็ต",
-          lat: "7.990846",
-          long: "98.345138"
-        },
-        {
-          id: "2",
-          name: "รถโรงเรียน 2",
-          status: true,
-          type: "รถบัส",
-          plateNumber: "70-6543",
-          plateProvince: "นครศรีธรรมราช",
-          lat: "8.006892",
-          long: "98.342649"
-        },
-        {
-          id: "3",
-          name: "รถโรงเรียน",
-          status: true,
-          type: "รถตู้",
-          plateNumber: "70-1234",
-          plateProvince: "ภูเก็ต",
-          lat: "7.990846",
-          long: "98.345138"
-        },
-        {
-          id: "4",
-          name: "รถโรงเรียน 2",
-          status: true,
-          type: "รถบัส",
-          plateNumber: "70-6543",
-          plateProvince: "นครศรีธรรมราช",
-          lat: "8.006892",
-          long: "98.342649"
-        },
-        {
-          id: "5",
-          name: "รถโรงเรียน",
-          status: true,
-          type: "รถตู้",
-          plateNumber: "70-1234",
-          plateProvince: "ภูเก็ต",
-          lat: "7.990846",
-          long: "98.345138"
-        },
-        {
-          id: "6",
-          name: "รถโรงเรียน 2",
-          status: true,
-          type: "รถบัส",
-          plateNumber: "70-6543",
-          plateProvince: "นครศรีธรรมราช",
-          lat: "8.006892",
-          long: "98.342649"
-        },
-        {
-          id: "7",
-          name: "รถโรงเรียน",
-          status: true,
-          type: "รถตู้",
-          plateNumber: "70-1234",
-          plateProvince: "ภูเก็ต",
-          lat: "7.990846",
-          long: "98.345138"
-        },
-        {
-          id: "8",
-          name: "รถโรงเรียน 2",
-          status: true,
-          type: "รถบัส",
-          plateNumber: "70-6543",
-          plateProvince: "นครศรีธรรมราช",
-          lat: "8.006892",
-          long: "98.342649"
-        },
-        {
-          id: "9",
-          name: "รถโรงเรียน",
-          status: true,
-          type: "รถตู้",
-          plateNumber: "70-1234",
-          plateProvince: "ภูเก็ต",
-          lat: "7.990846",
-          long: "98.345138"
-        },
-        {
-          id: "10",
-          name: "รถโรงเรียน 2",
-          status: true,
-          type: "รถบัส",
-          plateNumber: "70-6543",
-          plateProvince: "นครศรีธรรมราช",
-          lat: "8.006892",
-          long: "98.342649"
-        },
-        {
-          id: "11",
-          name: "รถโรงเรียน",
-          status: true,
-          type: "รถตู้",
-          plateNumber: "70-1234",
-          plateProvince: "ภูเก็ต",
-          lat: "7.990846",
-          long: "98.345138"
-        },
-        {
-          id: "12",
-          name: "รถโรงเรียน 2",
-          status: true,
-          type: "รถบัส",
-          plateNumber: "70-6543",
-          plateProvince: "นครศรีธรรมราช",
-          lat: "8.006892",
-          long: "98.342649"
-        }
-      ]
+      vehiclesShowList: [],
+      isLoading: false,
+      showErrorMessage: false,
+      lineKey: ""
     };
   },
-  mounted() {
-    this.vehiclesForShow = this.vehicles;
+  computed: {
+    ...mapState({
+      vehiclesList: state => state.school.vehiclesList,
+      vehiclesSearch: state => state.school.vehiclesSearch
+    })
+  },
+  methods: {
+    async searchByAPI() {
+      await this.$store.dispatch("searchVehicleByID", this.vehicleID);
+      console.log(this.vehiclesSearch);
+      this.vehiclesShowList = this.vehiclesSearch;
+    },
+    searchVehicle(vehicleID) {
+      this.isLoading = true;
+      if (vehicleID !== "") {
+        this.vehiclesShowList = [];
+        // let result = this.vehiclesList.filter(
+        //   vehicle => vehicle.id === vehicleID
+        // );
+        let result = this.vehiclesList.map(vh => {
+          let arrID = vh.id.split("");
+          if (vehicleID.length === 1) {
+            if (vehicleID === arrID[0]) {
+              return vh;
+            }
+          } else if (vehicleID.length === 2) {
+            if (vehicleID === arrID[0] + arrID[1]) {
+              return vh;
+            }
+          } else if (vehicleID.length === 3) {
+            if (vehicleID === arrID[0] + arrID[1] + arrID[2]) {
+              return vh;
+            }
+          } else if (vehicleID.length === 4) {
+            if (vehicleID === arrID[0] + arrID[1] + arrID[2] + arrID[3]) {
+              return vh;
+            }
+          } else if (vehicleID.length === 5) {
+            if (
+              vehicleID ===
+              arrID[0] + arrID[1] + arrID[2] + arrID[3] + arrID[4]
+            ) {
+              return vh;
+            }
+          }
+        });
+        result.map(res => {
+          if (res !== undefined) {
+            this.vehiclesShowList.push(res);
+          }
+        });
+      } else {
+        this.vehiclesShowList = this.vehiclesList;
+      }
+      this.isLoading = false;
+    },
+    async fetchVehicles() {
+      this.vehicleID = "";
+      await this.$store.dispatch("getVehiclesList", {
+        page: this.pageNumber,
+        size: 10
+      });
+      this.vehiclesShowList = this.vehiclesList;
+    },
+    async openAddModal() {
+      this.addModal = true;
+    },
+    prevPage() {
+      if (this.pageNumber !== 1) {
+        this.pageNumber = this.pageNumber - 1;
+      }
+      this.getVehiclesList();
+    },
+    nextPage() {
+      this.pageNumber = this.pageNumber + 1;
+      this.getVehiclesList();
+    },
+    async getVehiclesList() {
+      this.isLoading = true;
+      this.showErrorMessage = false;
+      await this.$store.dispatch("getVehiclesList", {
+        page: this.pageNumber,
+        size: 10
+      });
+      if (this.vehiclesList.length > 0) {
+        this.vehiclesShowList = this.vehiclesList;
+        this.showErrorMessage = false;
+      } else {
+        this.showErrorMessage = true;
+        this.vehiclesShowList = [];
+      }
+      this.isLoading = false;
+    },
+    deviceInfoLineKey(key) {
+      console.log("Line Key : ", key);
+      this.lineKey = key;
+    }
+  },
+  async beforeMount() {
+    this.getVehiclesList();
   }
 };
 </script>
@@ -223,8 +224,9 @@ h2 {
 }
 
 .top {
-  height: 230px;
+  height: 280px;
   width: 100vw;
+  margin-top: -50px;
   z-index: 99;
   background: white;
   position: fixed;
@@ -232,7 +234,7 @@ h2 {
 }
 
 .table {
-  margin-top: 25vh;
+  margin-top: 230px;
 }
 
 .search {
@@ -272,5 +274,27 @@ h2 {
 .add-input {
   width: 300px;
   margin-bottom: 10px;
+}
+
+.pagination-icon {
+  font-size: 20px;
+  color: $pink;
+}
+
+.page-number {
+  color: $greyText;
+  font-family: "FC_Home";
+  margin-top: -2px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
+}
+.spinner {
+  color: $blue;
+}
+.error-text {
+  color: $greyText;
+  font-family: "FC_Home";
+  font-size: 24px;
 }
 </style>
