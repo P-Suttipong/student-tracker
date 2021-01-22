@@ -57,7 +57,13 @@
                   color="light-blue-8"
                   size="lg"
                 >
-                  Login
+                  <q-spinner
+                    v-if="loading"
+                    class="spinner"
+                    size="3em"
+                    :thickness="5"
+                  />
+                  <p v-else class="text-h5 q-pt-md">Login</p>
                 </q-btn>
               </q-card-actions>
               <!-- <q-card-section class="text-center q-pa-none">
@@ -88,6 +94,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "PageIndex",
   data() {
@@ -97,18 +104,23 @@ export default {
       invalidLogin: false
     };
   },
+  computed: {
+    ...mapState({
+      loading: state => state.school.loginLoading
+    })
+  },
   methods: {
     async login() {
-        let res = await this.$store.dispatch("login", {
-          username: this.username,
-          password: this.password
-        });
-        console.log("RES", res);
-        if (res) {
-          this.$router.push("/");
-        } else {
-          this.invalidLogin = true;
-        }
+      let res = await this.$store.dispatch("login", {
+        username: this.username,
+        password: this.password
+      });
+      console.log("RES", res);
+      if (res) {
+        this.$router.push("/");
+      } else {
+        this.invalidLogin = true;
+      }
     },
     async logout() {
       localStorage.removeItem("user");
@@ -152,6 +164,10 @@ button {
   height: 230px;
   width: 20vw;
   object-fit: contain;
+}
+
+.spinner {
+  font-size: 10px;
 }
 
 /* Mobile */

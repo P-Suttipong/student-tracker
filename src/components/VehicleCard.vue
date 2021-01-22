@@ -1,11 +1,11 @@
 <template>
   <div>
-    <q-card class="card">
+    <q-card :class="getBackground" class="card">
       <div></div>
       <div class="row justify-between">
-        <p class="col-2">ID : {{ vehicle.device_id }}</p>
-        <p class="col-4">Name: {{ vehicle.name }}</p>
-        <p class="col-3">Group: {{ vehicle.account }}</p>
+        <p :class="getTopicColor" class="col-2">{{ vehicle.device_id }}</p>
+        <p :class="getTopicColor" class="col-4">{{ vehicle.name }}</p>
+        <p :class="getTopicColor" class="col-3">{{ vehicle.account }}</p>
         <!-- <q-toggle
           color="teal-4"
           class="toggle col-1"
@@ -16,13 +16,13 @@
         <!-- <p class="col-2">{{ vehicle.plateProvince }}</p> -->
         <div class="col-2 row justify-between">
           <p @click="openMapModal(vehicle.lat, vehicle.lon)" class="map-icon">
-            <i class="fas fa-map-marked-alt"></i>
+            <i :class="getTopicColor" class="fas fa-map-marked-alt"></i>
           </p>
           <p class="map-icon" @click="openStudentModal()">
-            <i class="fas fa-users"></i>
+            <i :class="getTopicColor" class="fas fa-users"></i>
           </p>
           <p class="map-icon" @click="openDeviceInfoModal()">
-            <i class="fas fa-inbox"></i>
+            <i :class="getTopicColor" class="fas fa-inbox"></i>
           </p>
         </div>
       </div>
@@ -45,27 +45,48 @@ export default {
   components: {
     BaseMap
   },
-  props: ["vehicle"],
+  props: ["vehicle", "topic"],
   data() {
     return {
       value: true,
       openMap: false,
       lat: "",
-      long: ""
+      long: "",
+      counter: 0
     };
+  },
+  computed: {
+    getBackground() {
+      if (this.topic === true) {
+        return "topic-bg";
+      }
+    },
+    getTopicColor() {
+      if (this.topic === true) {
+        return "topic-color";
+      }
+    }
   },
   methods: {
     async openMapModal(lat, long) {
-      this.lat = lat;
-      this.long = long;
-      this.openMap = true;
+      if (this.topic !== true) {
+        this.lat = lat;
+        this.long = long;
+        this.openMap = true;
+      }
     },
     openStudentModal() {
-      this.$emit("openModal");
+      if (this.topic !== true) {
+        this.$emit("openModal");
+        this.$emit("deviceID", this.vehicle.device_id);
+        this.$store.dispatch("getBeaconByDeviceID", this.vehicle.device_id);
+      }
     },
     openDeviceInfoModal() {
-      this.$emit("openInfoModal");
-      this.$emit("lineKey", this.vehicle.lineKey);
+      if (this.topic !== true) {
+        this.$emit("openInfoModal");
+        this.$emit("lineKey", this.vehicle.line_key);
+      }
     }
   },
   mounted() {
@@ -76,13 +97,15 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  border: 3px solid #16bfc4;
   width: 60vw;
-  height: 6vh;
-  padding: 20px 30px 20px 30px;
-  border-radius: 10px;
-  line-height: 80%;
-  margin-bottom: 10px;
+}
+
+.topic-bg {
+  background: #16bfc4;
+}
+
+.topic-color {
+  color: white;
 }
 
 p {

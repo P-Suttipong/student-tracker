@@ -2,5 +2,63 @@
 @font-face {
   font-family: "FC_Home";
   src: url("~assets/font/FCHomeRegular.ttf");
+}
+.card {
+  border: 2px solid #16bfc4;
+  width: 80vw;
+  height: 5vh;
+  padding: 15px 30px 15px 30px;
+  border-radius: 5px;
+  line-height: 80%;
+  margin-bottom: -2px;
+}
 
+.search {
+  width: 250px;
+  font-family: "FC_Home";
+  font-size: 22px;
+  padding: 1px 30px 5px 30px;
+  border-radius: 50px;
+  border: 3px solid $pink;
+  margin-top: -30px;
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-family: "FC_Home";
+  color: $greyText;
+}
+
+.top {
+  height: 280px;
+  width: 100vw;
+  margin-top: -50px;
+  z-index: 99;
+  background: white;
+  position: fixed;
+  top: 0;
+}
+
+.table {
+  margin-top: 230px;
+}
+
+.add-btn {
+  background-color: $pink;
+  color: white;
+  border-radius: 50px;
+  width: 80px;
+  height: 50px;
+  font-size: 20px;
+  font-family: "FC_Home";
+}
+.add-btn-2 {
+  margin-top: -30px;
+  margin-left: 10px;
+  background-color: $pink;
+  color: white;
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
 }

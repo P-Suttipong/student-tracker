@@ -1,5 +1,6 @@
 import Devices from "pages/Devices.vue";
-import Students from "pages/Students.vue";
+import Users from "pages/Users.vue";
+import ESP from "pages/ESP.vue";
 import Index from "pages/Index.vue";
 import Login from "../pages/Login.vue";
 import LoginLayout from "../layouts/LoginLayout.vue";
@@ -31,9 +32,9 @@ const routes = [
         }
       },
       {
-        path: "students",
-        component: Students,
-        name: "Students",
+        path: "users",
+        component: Users,
+        name: "Users",
         meta: {
           requiresAuth: true
         }
@@ -42,6 +43,14 @@ const routes = [
         path: "devices",
         component: Devices,
         name: "Devices",
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: "esp",
+        component: ESP,
+        name: "ESP",
         meta: {
           requiresAuth: true
         }

@@ -3,10 +3,9 @@
     style="height: 100vh;"
     class=" flex items-start justify-center"
   >
-    <div></div>
     <div class="column flex flex-center">
       <div class="top column flex flex-center">
-        <h2>ข้อมูลยานพาหนะ</h2>
+        <h2>ยานพาหนะ</h2>
         <div class="row">
           <q-input
             @input="searchVehicle(vehicleID)"
@@ -50,13 +49,18 @@
         <div v-if="isLoading" class="row justify-center q-mb-md">
           <q-spinner class="spinner" size="3em" :thickness="5" />
         </div>
-        <div v-else v-for="item in vehiclesShowList" :key="item.id">
-          <VehicleCard
-            @openModal="studentModal = true"
-            @openInfoModal="infoModal = true"
-            @lineKey="deviceInfoLineKey"
-            :vehicle="item"
-          ></VehicleCard>
+        <div v-else>
+          <VehicleCard :vehicle="vehicleTopic" :topic="true"></VehicleCard>
+          <div v-for="item in vehiclesShowList" :key="item.id">
+            <VehicleCard
+              @openModal="studentModal = true"
+              @openInfoModal="infoModal = true"
+              @lineKey="deviceInfoLineKey"
+              @deviceID="studentCardDeviceID"
+              :vehicle="item"
+              :topic="false"
+            ></VehicleCard>
+          </div>
         </div>
         <p class="error-text" v-if="showErrorMessage">
           ไม่พบข้อมูลที่ท่านต้องการ
@@ -81,6 +85,7 @@
     <StudentCard
       @closeModal="studentModal = false"
       :modal="studentModal"
+      :id="deviceID"
     ></StudentCard>
     <DeviceInfo
       @closeModal="infoModal = false"
@@ -111,7 +116,14 @@ export default {
       vehiclesShowList: [],
       isLoading: false,
       showErrorMessage: false,
-      lineKey: ""
+      lineKey: "",
+      deviceID: "",
+      count: 0,
+      vehicleTopic: {
+        device_id: "Device ID",
+        name: "Name",
+        account: "Account"
+      }
     };
   },
   computed: {
@@ -122,19 +134,22 @@ export default {
   },
   methods: {
     async searchByAPI() {
+      this.isLoading = true;
       await this.$store.dispatch("searchVehicleByID", this.vehicleID);
       console.log(this.vehiclesSearch);
       this.vehiclesShowList = this.vehiclesSearch;
+      this.isLoading = false;
     },
     searchVehicle(vehicleID) {
       this.isLoading = true;
+      console.log(vehicleID);
       if (vehicleID !== "") {
         this.vehiclesShowList = [];
         // let result = this.vehiclesList.filter(
         //   vehicle => vehicle.id === vehicleID
         // );
         let result = this.vehiclesList.map(vh => {
-          let arrID = vh.id.split("");
+          let arrID = vh.device_id.split("");
           if (vehicleID.length === 1) {
             if (vehicleID === arrID[0]) {
               return vh;
@@ -171,12 +186,14 @@ export default {
       this.isLoading = false;
     },
     async fetchVehicles() {
+      this.isLoading = true;
       this.vehicleID = "";
       await this.$store.dispatch("getVehiclesList", {
         page: this.pageNumber,
         size: 10
       });
       this.vehiclesShowList = this.vehiclesList;
+      this.isLoading = false;
     },
     async openAddModal() {
       this.addModal = true;
@@ -210,6 +227,10 @@ export default {
     deviceInfoLineKey(key) {
       console.log("Line Key : ", key);
       this.lineKey = key;
+    },
+    studentCardDeviceID(id) {
+      console.log("ID : ", id);
+      this.deviceID = id;
     }
   },
   async beforeMount() {
@@ -218,25 +239,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-h2 {
-  font-family: "FC_Home";
-  color: $greyText;
-}
-
-.top {
-  height: 280px;
-  width: 100vw;
-  margin-top: -50px;
-  z-index: 99;
-  background: white;
-  position: fixed;
-  top: 0;
-}
-
-.table {
-  margin-top: 230px;
-}
-
 .search {
   width: 250px;
   font-family: "FC_Home";
@@ -246,25 +248,6 @@ h2 {
   border: 3px solid $pink;
   margin-top: -30px;
   margin-bottom: 30px;
-}
-.add-btn {
-  background-color: $pink;
-  color: white;
-  border-radius: 50px;
-  width: 80px;
-  height: 50px;
-  font-size: 20px;
-  font-family: "FC_Home";
-}
-.add-btn-2 {
-  margin-top: -30px;
-  margin-left: 10px;
-  background-color: $pink;
-  color: white;
-  border-radius: 50px;
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
 }
 
 .dialog-card {

@@ -5,7 +5,7 @@
   >
     <div class="column flex flex-center">
       <div class="top column flex flex-center">
-        <h2>Beacon List</h2>
+        <h2>ESP List</h2>
         <div class="row">
           <q-input
             class="search"
@@ -38,9 +38,9 @@
           <q-spinner class="spinner" size="3em" :thickness="5" />
         </div>
         <div v-else>
-          <BeaconCard :beacon="beaconTopic" :topic="true"></BeaconCard>
-          <div v-for="item in beaconList" :key="item.id">
-            <BeaconCard :beacon="item" :topic="false"></BeaconCard>
+          <ESPCard :beacon="espTopic" :topic="true"></ESPCard>
+          <div v-for="item in ESPList" :key="item.id">
+            <ESPCard :beacon="item" :topic="false"></ESPCard>
           </div>
         </div>
       </div>
@@ -72,11 +72,11 @@
 
 <script>
 import { Quasar, QScrollArea } from "quasar";
-import BeaconCard from "../components/BeaconCard";
+import ESPCard from "../components/ESPCard";
 import { mapState } from "vuex";
 export default {
-  name: "devices",
-  components: { BeaconCard, QScrollArea },
+  name: "esp",
+  components: { ESPCard, QScrollArea },
   data() {
     return {
       beaconID: "",
@@ -85,18 +85,14 @@ export default {
       esp_id: "",
       device_id: "",
       mac: "",
-      beaconTopic: {
-        name: "Name",
-        mac: "MAC Address",
-        esp_id: "ESP ID",
-        device_id: "Device ID",
-        account: "Account"
+      espTopic: {
+        esp_id: "ESP ID"
       }
     };
   },
   computed: {
     ...mapState({
-      beaconList: state => state.school.beaconList
+      ESPList: state => state.school.ESPList
     })
   },
   methods: {
@@ -104,20 +100,11 @@ export default {
     openAddModal() {
       this.addModal = true;
     },
-    confirmAdd() {
-      let res = this.$store.dispatch("addBeacon", {
-        esp_id: this.esp_id,
-        device_id: this.device_id,
-        mac: this.mac
-      });
-      this.esp_id = "";
-      this.device_id = "";
-      this.mac = "";
-    }
+    async confirmAdd() {}
   },
   mounted() {
     this.isLoading = true;
-    this.$store.dispatch("getAllBeacon");
+    this.$store.dispatch("getESPList");
     this.isLoading = false;
   }
 };

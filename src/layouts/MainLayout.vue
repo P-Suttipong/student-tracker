@@ -17,17 +17,17 @@
             @click="deviceActive()"
             :class="deviceClass"
             class="icon-menu"
+            src="~assets/img/beacon_icon.png"
+          />
+          <img
+            @click="espActive()"
+            :class="espClass"
+            class="icon-menu"
             src="~assets/img/device_icon.png"
           />
           <img
             @click="studentActive()"
             :class="studentClass"
-            class="icon-menu"
-            src="~assets/img/students_icon.png"
-          />
-          <img
-            @click="userActive()"
-            :class="userClass"
             class="icon-menu"
             src="~assets/img/user_icon.png"
           />
@@ -67,7 +67,7 @@ export default {
       vehicleClass: "",
       deviceClass: "",
       studentClass: "",
-      userClass: ""
+      espClass: ""
     };
   },
   methods: {
@@ -76,6 +76,7 @@ export default {
       this.deviceClass = "";
       this.studentClass = "";
       this.userClass = "";
+      this.espClass = "";
       this.$router.push("/");
     },
     deviceActive() {
@@ -83,6 +84,7 @@ export default {
       this.deviceClass = "active-menu";
       this.studentClass = "";
       this.userClass = "";
+      this.espClass = "";
       this.$router.push("/devices");
     },
     studentActive() {
@@ -90,16 +92,18 @@ export default {
       this.deviceClass = "";
       this.studentClass = "active-menu";
       this.userClass = "";
-      this.$router.push("/students");
+      this.espClass = "";
+      this.$router.push("/users");
     },
-    userActive() {
+    espActive() {
       this.vehicleClass = "";
       this.deviceClass = "";
       this.studentClass = "";
-      this.userClass = "active-menu";
-      this.$router.push("/");
+      this.userClass = "";
+      this.espClass = "active-menu";
+      this.$router.push("/esp");
     },
-    async logOut(){
+    async logOut() {
       let res = await this.$store.dispatch("logout");
       if (res) {
         this.$router.push("/login");
@@ -112,14 +116,22 @@ export default {
       this.vehicleClass = "";
       this.deviceClass = "active-menu";
       this.studentClass = "";
-    } else if (this.$route.path === "/students") {
+      this.espClass = "";
+    } else if (this.$route.path === "/users") {
       this.vehicleClass = "";
       this.deviceClass = "";
       this.studentClass = "active-menu";
+      this.espClass = "";
+    } else if (this.$route.path === "/esp") {
+      this.vehicleClass = "";
+      this.deviceClass = "";
+      this.studentClass = "";
+      this.espClass = "active-menu";
     } else {
       this.vehicleClass = "active-menu";
       this.deviceClass = "";
       this.studentClass = "";
+      this.espClass = "";
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-dialog v-model="modal" persistent>
-      <q-card class="card">
+      <q-card class="info-card">
         <q-card-section class="row justify-center">
           <div><i class="fas fa-inbox title-icon"></i></div>
           <div class="text-h4 card-title">Device Information</div>
@@ -10,7 +10,7 @@
         <q-separator />
         <q-card-section class="scroll">
           <div class="q-mt-md row q-ml-lg">
-            <p class="col-2">ESP ID :</p>
+            <p class="detail col-3">ESP ID :</p>
             <q-input
               style="width: 130px;"
               class="col-5 input"
@@ -21,22 +21,22 @@
             />
           </div>
           <div class="q-mt-sm q-ml-lg row">
-            <p class="col-2">Line Key :</p>
+            <p class="detail col-3">Line Key :</p>
             <q-input
               style="width: 250px;"
               class="input"
               dense
               rounded
               outlined
-              v-model="espId"
+              v-model="line_key"
             />
           </div>
         </q-card-section>
         <q-separator />
 
         <q-card-actions align="right">
-          <q-btn class="cancel-btn" label="ยกเลิก" @click="close()" />
-          <q-btn class="accept-btn" label="บันทึก" @click="accept()" />
+          <q-btn flat class="cancel-btn" label="ยกเลิก" @click="close()" />
+          <q-btn flat class="accept-btn" label="บันทึก" @click="accept()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -49,7 +49,8 @@ export default {
   props: ["modal", "lineKey"],
   data() {
     return {
-      espId: "A8032A699934"
+      espId: "A8032A699934",
+      line_key: ""
     };
   },
   methods: {
@@ -62,12 +63,17 @@ export default {
   },
   mounted() {
     console.log(this.lineKey);
+    if (this.lineKey === "" || this.lineKey === null) {
+      this.line_key = "ไม่มี Line Key";
+    } else {
+      this.line_key = this.lineKey;
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.card {
+.info-card {
   width: 500px;
   height: auto;
 }
@@ -83,19 +89,21 @@ export default {
   margin-right: 15px;
 }
 .cancel-btn {
-  background-color: $pink;
-  color: white;
+  color: $pink;
   font-family: "FC_Home";
   font-size: 18px;
 }
 .accept-btn {
-  background-color: $blue;
-  color: white;
+  color: $blue;
   font-family: "FC_Home";
   font-size: 18px;
 }
 .input {
   margin-top: -15px;
   margin-left: 15px;
+}
+.detail {
+  font-family: "FC_Home";
+  font-size: 24px;
 }
 </style>
