@@ -56,6 +56,12 @@
             label="Device ID"
           />
           <q-input
+            v-model="eeprom"
+            class="add-input"
+            outlined
+            label="EEPROM Address"
+          />
+          <q-input
             v-model="mac"
             class="add-input"
             outlined
@@ -85,6 +91,7 @@ export default {
       esp_id: "",
       device_id: "",
       mac: "",
+      eeprom: "",
       beaconTopic: {
         name: "Name",
         mac: "MAC Address",
