@@ -15,6 +15,7 @@
             <p class="col-2">MAC Address</p>
             <p class="col-2">Last Status</p>
             <p class="col-2">Parents Phone</p>
+            <p class="col-2">Gender</p>
             <p class="col-1"></p>
           </div>
           <div v-for="std in students" :key="std.id">
@@ -28,8 +29,18 @@
                 ></i>
               </p>
               <p class="col-2">{{ std.parents_phone }}</p>
+              <p class="col-2">
+                {{ std.gender }}
+              </p>
               <q-btn
-                @click="openUpdateModal(std.id, std.name, std.parents_phone)"
+                @click="
+                  openUpdateModal(
+                    std.id,
+                    std.name,
+                    std.parents_phone,
+                    std.gender
+                  )
+                "
                 class="col-1 save-btn"
                 rounded
                 ><p>แก้ไข</p></q-btn
@@ -62,6 +73,18 @@
               rounded
               outlined
               v-model="nameUpdate"
+            />
+          </div>
+          <div class="row">
+            <p class="col-4 text-h6">Gender:</p>
+            <q-select
+              class="update-input"
+              style="width: 250px;"
+              dense
+              rounded
+              outlined
+              :options="options"
+              v-model="genderUpdate"
             />
           </div>
           <div class="row">
@@ -112,7 +135,9 @@ export default {
       openModal: false,
       nameUpdate: "",
       phoneUpdate: "",
-      idUpdate: ""
+      idUpdate: "",
+      genderUpdate: "",
+      options: ["male", "female"]
     };
   },
   computed: {
@@ -136,7 +161,8 @@ export default {
         device_id: this.id,
         beacon_id: this.idUpdate,
         name: this.nameUpdate,
-        parents_phone: this.phoneUpdate
+        parents_phone: this.phoneUpdate,
+        gender: this.genderUpdate
       });
     },
     iconStatusClass(last) {
@@ -146,14 +172,16 @@ export default {
         return "deactive-status";
       }
     },
-    openUpdateModal(id, name, phone) {
+    openUpdateModal(id, name, phone, gender) {
       console.log(this.id);
       console.log(id);
       console.log(name);
       console.log(phone);
+      console.log(gender);
       this.nameUpdate = name;
       this.phoneUpdate = phone;
       this.idUpdate = id;
+      this.genderUpdate = gender;
       this.openModal = true;
     }
   }

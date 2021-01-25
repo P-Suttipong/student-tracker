@@ -28,9 +28,9 @@
           <q-btn @click="searchByAPI()" class="add-btn-2"
             ><i class="fas fa-search"></i
           ></q-btn>
-          <q-btn @click="openAddModal()" class="add-btn-2"
+          <!-- <q-btn @click="openAddModal()" class="add-btn-2"
             ><i class="fas fa-plus"></i
-          ></q-btn>
+          ></q-btn> -->
         </div>
       </div>
       <div class="table">

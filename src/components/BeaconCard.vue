@@ -68,6 +68,7 @@ export default {
 <style lang="scss" scoped>
 .card {
   width: 60vw;
+  min-width: 1000px;
 }
 
 .topic-bg {

@@ -150,12 +150,13 @@ p {
 }
 
 .icon-menu:hover {
-  background-color: rgba($pink, 0.2);
+  background-color: rgba($pink, 0.1);
   cursor: pointer;
 }
 
 .active-menu {
   border-right: 8px solid $pink;
+  background: rgba($pink, 0.1);
 }
 
 .logo {

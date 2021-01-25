@@ -16,7 +16,8 @@ const state = {
   studentList: [],
   beaconList: [],
   userList: [],
-  ESPList: []
+  ESPList: [],
+  beaconFromEspID: []
 };
 
 const getters = {};
@@ -151,12 +152,14 @@ const actions = {
   updateBeacon: async ({ commit }, payload) => {
     console.log(payload);
     // let decodeName = payload.name.decode(decodeURI, StandardCharsets.UTF_8);
+    let gender;
     await api
       .put("/updateBeacon", {
         device_id: payload.device_id,
         beacon_id: payload.beacon_id,
         name: payload.name,
-        parents_phone: payload.parents_phone
+        parents_phone: payload.parents_phone,
+        gender: payload.gender
       })
       .then(res => {
         console.log(res);
@@ -223,7 +226,8 @@ const actions = {
           headers: {
             esp_id: payload.esp_id,
             device_id: payload.device_id,
-            mac: payload.mac
+            mac: payload.mac,
+            eeprom: payload.eeprom
           }
         }
       )
@@ -236,6 +240,22 @@ const actions = {
         resData = false;
       });
     return resData;
+  },
+  getBeaconByEspID: async ({ commit }, id) => {
+    console.log(id);
+    await api
+      .get("/getBeaconByEspID", {
+        headers: {
+          esp_id: id
+        }
+      })
+      .then(res => {
+        console.log(res);
+        commit("SET_BEACON_BY_ESP", res.data);
+      })
+      .catch(error => {
+        console.log("Get beacon list Error :", error.message);
+      });
   }
 };
 
@@ -263,14 +283,18 @@ const mutations = {
   SET_ESP_LIST(state, list) {
     state.ESPList = list;
   },
+  SET_BEACON_BY_ESP(state, list) {
+    state.beaconFromEspID = list;
+  },
   UPDATE_STUDENT_LIST(state, data) {
     console.log(data);
     state.studentList.map(student => {
       if (student.id === data.id) {
         student.last_status = data.last_status;
         student.name = data.name;
-        (student.parents_phone = data.parents_phone),
-          (student.time_stamp = data.time_stamp);
+        student.parents_phone = data.parents_phone;
+        student.time_stamp = data.time_stamp;
+        student.gender = data.gender;
       }
     });
   }

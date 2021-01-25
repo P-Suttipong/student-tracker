@@ -28,9 +28,9 @@
           <q-btn @click="searchByAPI()" class="add-btn-2"
             ><i class="fas fa-search"></i
           ></q-btn>
-          <q-btn @click="openAddModal()" class="add-btn-2"
+          <!-- <q-btn @click="openAddModal()" class="add-btn-2"
             ><i class="fas fa-plus"></i
-          ></q-btn>
+          ></q-btn> -->
         </div>
       </div>
       <div class="table">
@@ -45,34 +45,6 @@
         </div>
       </div>
     </div>
-    <q-dialog v-model="addModal">
-      <q-card class="dialog-card">
-        <div>
-          <q-input v-model="esp_id" class="add-input" outlined label="ESP ID" />
-          <q-input
-            v-model="device_id"
-            class="add-input"
-            outlined
-            label="Device ID"
-          />
-          <q-input
-            v-model="eeprom"
-            class="add-input"
-            outlined
-            label="EEPROM Address"
-          />
-          <q-input
-            v-model="mac"
-            class="add-input"
-            outlined
-            label="MAC Address"
-          />
-          <div class="row justify-center">
-            <q-btn @click="confirmAdd" class="add-btn">เพิ่ม</q-btn>
-          </div>
-        </div>
-      </q-card>
-    </q-dialog>
   </q-scroll-area>
 </template>
 
@@ -134,6 +106,7 @@ export default {
 p {
   font-family: "FC_Home";
 }
+
 .dialog-card {
   padding: 20px 20px 20px 20px;
 }
