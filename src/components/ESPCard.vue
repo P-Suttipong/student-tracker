@@ -11,31 +11,46 @@
     </q-card>
     <q-dialog v-model="openModal">
       <q-card class="beacon-list">
-        <q-card-section class="top-add-modal row  justify-between">
-          <p class="modal-title">{{ beacon.esp_id }}</p>
-          <q-btn @click="openAddModal()" class="add-beacon add-btn-2"
-            ><i class="fas fa-plus"></i
-          ></q-btn>
-        </q-card-section>
-        <q-separator />
-        <q-card-section class="list">
-          <div class="topic row justify-between">
+        <q-card-section class="top-add-modal ">
+          <div class="row  justify-between">
+            <p class="modal-title">{{ beacon.esp_id }}</p>
+            <q-btn @click="openAddModal()" class="add-beacon add-btn-2"
+              ><i class="fas fa-plus"></i
+            ></q-btn>
+          </div>
+
+          <div class="topic q-mt-sm row justify-between">
             <p class="col-2 q-pl-lg topic-title">Device ID</p>
             <p class="col-3 topic-title">MAC</p>
             <p class="col-2 topic-title">EEPROM</p>
             <p class="col-2 topic-title">Status</p>
             <p class="col-1 topic-title">Tool</p>
           </div>
-          <div v-for="item in beaconFromEspID" :key="item.id">
+        </q-card-section>
+        <q-separator />
+        <q-card-section class="list">
+          <div v-for="item in beaconFromEspID.slice().reverse()" :key="item.id">
             <div class="row justify-between">
               <p class="detial col-2 q-pl-lg ">{{ item.device_id }}</p>
-              <p class="detial col-3">{{ item.mac }}</p>
+              <p class="detial col-3">
+                {{ item.mac.length > 0 ? item.mac : "EMPTY" }}
+              </p>
               <p class="detial col-2 q-pl-lg ">{{ item.eeprom }}</p>
               <p class="detial col-2">{{ getStatus(item.status) }}</p>
-              <p v-if="item.status === `2`" class="detial col-1 delete-icon">
+              <p
+                @click="
+                  deleteFromEEPROM(item.esp_id, item.device_id, item.eeprom)
+                "
+                v-if="item.status === `2`"
+                class="detial col-1 delete-icon"
+              >
                 <i class="fas fa-trash-alt"></i>
               </p>
-              <p v-if="item.status === `0`" class="detial col-1 delete-icon">
+              <p
+                @click="cancelSetting(item.id, item.esp_id, item.mac)"
+                v-if="item.status === `0`"
+                class="detial col-1 delete-icon"
+              >
                 <i class="fas fa-times"></i>
               </p>
               <p
@@ -152,6 +167,23 @@ export default {
     },
     openAddModal() {
       this.addModal = true;
+    },
+    async cancelSetting(id, esp_id, mac) {
+      this.$store.dispatch("cancelBeaconSetting", {
+        id: id,
+        esp_id: esp_id,
+        mac: mac
+      });
+    },
+    async deleteFromEEPROM(esp_id, device_id, eeprom) {
+      console.log("delete");
+      let res = await this.$store.dispatch("addBeacon", {
+        esp_id: esp_id,
+        device_id: device_id,
+        eeprom: eeprom,
+        mac: ""
+      });
+      this.$store.dispatch("getBeaconByEspID", this.esp_id);
     }
   },
   mounted() {
@@ -171,6 +203,7 @@ export default {
 }
 
 .top-add-modal {
+  z-index: 99;
   position: fixed;
   top: 10vh;
   width: 960px;
@@ -222,10 +255,14 @@ p {
   font-size: 20px;
 }
 
+.list {
+  margin-top: 40px;
+}
+
 .topic {
   // font-weight: bold;
   background: #16bfc4;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .topic-title {

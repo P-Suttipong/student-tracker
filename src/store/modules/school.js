@@ -256,6 +256,28 @@ const actions = {
       .catch(error => {
         console.log("Get beacon list Error :", error.message);
       });
+  },
+  cancelBeaconSetting: async ({ commit }, payload) => {
+    console.log(payload);
+    await api
+      .post(
+        "/cancelBeaconSetting",
+        {},
+        {
+          headers: {
+            id: payload.id,
+            esp_id: payload.esp_id,
+            mac: payload.mac
+          }
+        }
+      )
+      .then(res => {
+        console.log(res);
+        commit("UPDATE_BEACON_ESPID", res.data[0]);
+      })
+      .catch(error => {
+        console.log("Get beacon list Error :", error.message);
+      });
   }
 };
 
@@ -295,6 +317,14 @@ const mutations = {
         student.parents_phone = data.parents_phone;
         student.time_stamp = data.time_stamp;
         student.gender = data.gender;
+      }
+    });
+  },
+  UPDATE_BEACON_ESPID(state, data) {
+    console.log(data);
+    state.beaconFromEspID.map(beacon => {
+      if (beacon.id === data.id) {
+        beacon.status = data.status;
       }
     });
   }
